@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<style type="text/css">
+.page {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+p {
+  font-size: 20px;
+}
+input {
+  margin: 0 auto;
+  padding: 5px;
+  border: solid 1px blue;
+}
+button {
+  margin: 15px;
+  padding: 5px;
+  background: linear-gradient(to bottom right, blue, pink);
+  color: white;
+  border: 1px solid silver;
+  cursor: pointer;
+}
+</style>
+
+<body>
+<div class = 'page'>
+  <p>Введите размеры изображения:</p> 
+  <div class = 'form'>
+ <input class = 'width' placeholder = 'Ширина' type = 'number'>
+ <input class = 'height' placeholder = 'Высота' type = 'number'></div>
+<button>Получить изображение</button>
+<div class = 'images'></div><img class = 'output'>
+</div>
+
+<script type="text/javascript">
+let imgs = document.querySelector('.images');
+let but = document.querySelector('button');
+let outp = document.querySelector('.output');
+
+//функция получения объекта через fetch(blob)
+function useRequest(width, height) {
+  return fetch(`https://picsum.photos/${width}/${height}`)
+  .then((response) => {
+    console.log('response', response);
+    //получаем ответ на запрос в виде объекта
+    const result = response.blob();
+    console.log(result);
+    return result;
+  })
+ .then(function(blob) {
+    //переводим объект ответа в изображение
+    outp.src = URL.createObjectURL(blob);
+    imgs.innerText = '';
+  })
+ 
+.catch(() => {
+    console.log('error');
+  });
+  console.log(url);
+       }
+//вешаем обработчик на кнопку
+but.addEventListener('click', () => {
+let width = document.querySelector('.width').value;
+let height = document.querySelector('.height').value;
+  if(+width < 100 || +width > 300) {
+    imgs.innerText = `Ширина вне диапазона от 100 до 300`;
+    console.log(width);
+  } else if (+height < 100 || +height > 300) {
+    imgs.innerText = `Высота вне диапазона от 100 до 300`;
+    console.log(height);
+  } else 
+    useRequest(width, height);
+});
+  
+</script>
+</body>
+</html>

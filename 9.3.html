@@ -1,0 +1,71 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+</head>
+<body>
+<main> 
+  <div> 
+    <input class ='input' value = '' type = 'number'> 
+  <button class = 'button'>SUBMIT</button> 
+  <div class = 'result'></div></div> 
+  </main>
+
+
+
+   <script type = "text/javascript">
+const but = document.querySelector('.button');
+const res = document.querySelector('.result'); 
+
+function initReq(value, callback) {
+  let xhr = new XMLHttpRequest();
+  let url = `https://picsum.photos/v2/list?limit=${value}`;
+xhr.open('GET', url);
+xhr.onload = function() {
+  if(xhr.status !== 200) {
+    console.log("Status Bad", xhr.status);
+  } else {
+      const result = JSON.parse(xhr.response);
+      if (callback) {
+        callback(result);
+      console.log('ok');
+  }
+}
+};
+    xhr.onerror = function() {
+    console.log('Ошибка! Статус ответа: ', xhr.status);
+  };
+  
+xhr.send();
+};
+
+function displayResult(apiData) {
+  let cards = '';
+  apiData.forEach(item => {
+    const cardBlock = `
+      <div class="card">
+        <img
+          src="${item.download_url}"
+          class="card-image" style = "height: 150px; width: 200px; margin-top: 10px;"
+        />
+        <p>${item.author}</p>
+      </div>`;
+    cards = cards + cardBlock;
+  });
+  res.innerHTML = cards;
+};
+
+ 
+but.addEventListener('click', () => {
+  const value = document.querySelector('.input').value;
+  if (+value > 10 || +value < 1) { 
+  res.innerHTML = "<div>Число вне диапазона от 1 до 10</div>"; 
+  } else initReq(value, displayResult);
+});
+
+  </script>
+
+ 
+</body>
+</html>
